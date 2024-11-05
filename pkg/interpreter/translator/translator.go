@@ -154,7 +154,7 @@ func (t *translator) Translate(lp core.LogicalPlan) (*graph.Graph, error) {
 	cclCheckPartyList := []string{t.issuerPartyCode}
 	if lp.IntoOpt() != nil {
 		for _, partyFile := range lp.IntoOpt().PartyFiles {
-			if partyFile.PartyCode != t.issuerPartyCode {
+			if partyFile.PartyCode != "" && partyFile.PartyCode != t.issuerPartyCode {
 				cclCheckPartyList = append(cclCheckPartyList, partyFile.PartyCode)
 			}
 		}
@@ -279,8 +279,8 @@ func (t *translator) addPublishNode(ln logicalNode) error {
 func (t *translator) addDumpFileNode(ln logicalNode) error {
 	intoOpt := ln.IntoOpt()
 	// issuer party code can see all outputs
-	if len(intoOpt.PartyFiles) == 0 {
-		intoOpt.PartyFiles = append(intoOpt.PartyFiles, &ast.PartyFile{PartyCode: t.issuerPartyCode})
+	if len(intoOpt.PartyFiles) == 1 && intoOpt.PartyFiles[0].PartyCode == "" {
+		intoOpt.PartyFiles[0].PartyCode = t.issuerPartyCode
 	}
 
 	for _, partyFile := range intoOpt.PartyFiles {

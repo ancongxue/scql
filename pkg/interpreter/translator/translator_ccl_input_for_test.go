@@ -1703,6 +1703,12 @@ Outputs: []
 2 -> 3 [label = "t_2:{plain_int_0:PRIVATE:INT64}"]
 4 -> 5 [label = "t_4:{plain_int_0:PRIVATE:INT64}"]
 }`, ``, testConf{groupThreshold: 0, batched: false}},
+	{`select plain_int_0 from alice.tbl_0 into outfile '/tmp/output.txt' fields terminated BY ','`, `digraph G {
+0 [label="runsql:{in:[],out:[Out:{t_0,},],attr:[sql:select tbl_0.plain_int_0 from alice.tbl_0,table_refs:[alice.tbl_0],],party:[alice,]}"]
+1 [label="dump_file:{in:[In:{t_0,},],out:[Out:{t_1,},],attr:[field_deliminator:,,file_path:/tmp/output.txt,line_terminator:
+,quoting_style:0,],party:[alice,]}"]
+0 -> 1 [label = "t_0:{plain_int_0:PRIVATE:INT64}"]
+}`, ``, testConf{groupThreshold: 0, batched: false}},
 	{`select plain_int_0 from alice.tbl_0 into outfile party_code 'alice' '/tmp/output.txt' fields terminated BY ','`, `digraph G {
 0 [label="runsql:{in:[],out:[Out:{t_0,},],attr:[sql:select tbl_0.plain_int_0 from alice.tbl_0,table_refs:[alice.tbl_0],],party:[alice,]}"]
 1 [label="dump_file:{in:[In:{t_0,},],out:[Out:{t_1,},],attr:[field_deliminator:,,file_path:/tmp/output.txt,line_terminator:
